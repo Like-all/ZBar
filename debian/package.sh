@@ -1,5 +1,5 @@
-export DEBFULLNAME="Azer Abdullaev (Like All)"
-export DEBEMAIL="like-all@yandex.com"
 NAME="zbar"
 PRODUCTION_FLAVOURS="any"
+PRODUCTION_ARCHITECTURES="any"
 TESTING_FLAVOURS="jessie"
+TESTING_ARCHITECTURES="amd64"
