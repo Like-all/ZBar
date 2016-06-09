@@ -1,8 +1,14 @@
-zbar (0.11-2) UNRELEASED; urgency=medium
+zbar (0.11-3) UNRELEASED; urgency=medium
+
+  * Implement --once parameter
+
+ -- Azer Abdullaev (Like All) <like-all@yandex.com>  Thu, 09 Jun 2016 16:54:02 +0300
+
+zbar (0.11-2) unstable; urgency=medium
 
   * Rebuild
 
- -- Azer Abdullaev (Like All) <like-all@yandex.com>  Thu, 09 Jun 2016 16:41:46 +0300
+ -- Azer Abdullaev (Like All) <like-all@yandex.com>  Thu, 09 Jun 2016 16:54:00 +0300
 
 zbar (0.11-1) unstable; urgency=medium
 
