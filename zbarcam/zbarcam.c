@@ -49,7 +49,6 @@ static const char *note_usage =
     "    --xml           use XML output format\n"
     "    --raw           output decoded symbol data without symbology prefix\n"
     "    --nodisplay     disable video display window\n"
-    "    -o, --once      exit after scanning"
     "    --prescale=<W>x<H>\n"
     "                    request alternate video image size from driver\n"
     "    -S<CONFIG>[=<VALUE>], --set <CONFIG>[=<VALUE>]\n"
@@ -65,7 +64,6 @@ static const char *xml_foot =
 
 static zbar_processor_t *proc;
 static int quiet = 0;
-static int once = 0;
 static enum {
     DEFAULT, RAW, XML
 } format = DEFAULT;
@@ -107,27 +105,17 @@ static void data_handler (zbar_image_t *img, const void *userdata)
         if(type == ZBAR_PARTIAL)
             continue;
 
-        if(!format) {
-            printf("%s:", zbar_get_symbol_name(type));
-            if(fwrite(zbar_symbol_get_data(sym),
-                      zbar_symbol_get_data_length(sym),
-                      1, stdout) != 1)
-                continue;
-        }
-        else if(format == RAW) {
-            if(fwrite(zbar_symbol_get_data(sym),
-                      zbar_symbol_get_data_length(sym),
-                      1, stdout) != 1)
-                continue;
-        }
+        if(!format)
+            printf("%s%s:%s\n",
+                   zbar_get_symbol_name(type), zbar_get_addon_name(type),
+                   zbar_symbol_get_data(sym));
+        else if(format == RAW)
+            printf("%s\n", zbar_symbol_get_data(sym));
         else if(format == XML) {
             if(!n)
                 printf("<index num='%u'>\n", zbar_image_get_sequence(img));
-            zbar_symbol_xml(sym, &xml_buf, &xml_len);
-            if(fwrite(xml_buf, xml_len, 1, stdout) != 1)
-                continue;
+            printf("%s\n", zbar_symbol_xml(sym, &xml_buf, &xml_len));
         }
-        printf("\n");
         n++;
     }
 
@@ -137,9 +125,6 @@ static void data_handler (zbar_image_t *img, const void *userdata)
 
     if(!quiet && n)
         fprintf(stderr, BELL);
-
-    if(once)
-        exit(0);
 }
 
 int main (int argc, const char *argv[])
@@ -177,7 +162,6 @@ int main (int argc, const char *argv[])
                 case 'h': return(usage(0));
                 case 'v': zbar_increase_verbosity(); break;
                 case 'q': quiet = 1; break;
-                case 'o': once = 1; break;
                 default:
                     fprintf(stderr, "ERROR: unknown bundled config: -%c\n\n",
                             argv[i][j]);
@@ -205,8 +189,6 @@ int main (int argc, const char *argv[])
         }
         else if(!strcmp(argv[i], "--quiet"))
             quiet = 1;
-        else if(!strcmp(argv[i], "--once"))
-            once = 1;
         else if(!strcmp(argv[i], "--xml"))
             format = XML;
         else if(!strcmp(argv[i], "--raw"))

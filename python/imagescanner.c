@@ -67,8 +67,7 @@ imagescanner_get_results (zbarImageScanner *self,
 }
 
 static PyGetSetDef imagescanner_getset[] = {
-    { "results", (getter)imagescanner_get_results, NULL, NULL, NULL},
-    {NULL}  /* Sentinel */
+    { "results", (getter)imagescanner_get_results, },
 };
 
 static PyObject*
